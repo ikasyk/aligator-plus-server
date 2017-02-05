@@ -32,10 +32,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.getOne(id);
     }
 
+    @Transactional(readOnly = true)
     public User findByLogin(String login) {
         return userRepository.findByLogin(login);
     }
 
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

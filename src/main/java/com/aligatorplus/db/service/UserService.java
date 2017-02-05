@@ -19,5 +19,4 @@ public interface UserService {
     User findByEmail(String email);
     void update(User entity);
     void delete(User entity);
-
 }

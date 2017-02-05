@@ -5,13 +5,14 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="com.aligatorplus"/>
-    <!--<context:annotation-config/>-->
+    <context:component-scan base-package="com.aligatorplus.controller"/>
+    <context:component-scan base-package="com.aligatorplus.db"/>
+
     <mvc:annotation-driven/>
 
     <jpa:repositories base-package="com.aligatorplus.db.repository"/>
 
-    <bean class="com.aligatorplus.db.JPAConfig" id="jpaConfig"/>
+    <!--<bean class="com.aligatorplus.db.JPAConfig" id="jpaConfig"/>-->
 
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -23,18 +24,5 @@
 
 
     <bean id="jacksonObjectMapper" class="com.aligatorplus.JsonMapper" />
-
-    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-        <!--<property name="prefix" value="/WEB-INF/" />-->
-        <!--<property name="suffix" value=".jsp" />-->
-    <!--</bean>-->
-
-
-    <!--<bean id="dbSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
-        <!--<property name="driverClassName" value="org.postgresql.Driver" />-->
-        <!--<property name="url" value="jdbc:postgresql://localhost:5432/aligatorplus-jdbc" />-->
-        <!--<property name="username" value="postgres" />-->
-        <!--<property name="password" value="" />-->
-    <!--</bean>-->
 
 </beans>

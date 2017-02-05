@@ -1,6 +1,5 @@
 package com.aligatorplus.controller;
 
-import com.aligatorplus.db.JPAConfig;
 import com.aligatorplus.db.service.UserService;
 import com.aligatorplus.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Project AligatorPlus
@@ -25,11 +22,8 @@ public class SignIn {
     private UserService userService;
 
     @RequestMapping("/world")
-    public @ResponseBody List<User> hello() {
-//        User u = new User(3L, "igojkr", "erwer@ere.er");
-//        userService.create(u);
-        List<User> users = userService.findAll();
-        System.out.println(users);
-        return users;
+    public @ResponseBody User hello() {
+        User user = userService.findByEmail("kasyk3@gmail.com");
+        return user;
     }
 }

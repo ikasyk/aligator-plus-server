@@ -12,7 +12,8 @@ import javax.persistence.*;
 public class User extends AbstractEntity {
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id protected Long id;
+    @Id
+    protected Long id;
 
     @Column(unique = true)
     private String login;

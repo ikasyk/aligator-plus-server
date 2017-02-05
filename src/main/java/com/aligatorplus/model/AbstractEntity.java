@@ -13,10 +13,6 @@ import java.io.Serializable;
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class AbstractEntity implements Serializable {
-//    @Column(unique = true)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Id protected Long id;
-//
     public abstract Long getId();
     public abstract void setId(Long id);
 
