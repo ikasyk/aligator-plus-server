@@ -13,7 +13,7 @@ public class User extends AbstractEntity {
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    protected Long id;
+    private Long id;
 
     @Column(unique = true)
     private String login;
@@ -21,16 +21,20 @@ public class User extends AbstractEntity {
     @Column(unique = true)
     private String email;
 
+    @Column
+    private String password;
+
     public User() {
         this.id = 0L;
         this.login = null;
         this.email = null;
+        this.password = null;
     }
 
-    public User(Long id, String login, String email) {
-        this.id = id;
+    public User(String login, String email, String password) {
         this.login = login;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {

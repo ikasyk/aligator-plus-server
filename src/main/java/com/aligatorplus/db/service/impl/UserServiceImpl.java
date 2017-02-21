@@ -3,10 +3,15 @@ package com.aligatorplus.db.service.impl;
 import com.aligatorplus.db.service.UserService;
 import com.aligatorplus.db.repository.UserRepository;
 import com.aligatorplus.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -16,6 +21,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
