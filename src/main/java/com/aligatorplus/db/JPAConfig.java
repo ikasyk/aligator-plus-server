@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.sql.DataSource;
 import java.util.Properties;
 

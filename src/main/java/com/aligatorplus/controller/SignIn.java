@@ -28,10 +28,12 @@ public class SignIn {
 
     @RequestMapping("/world")
     @ResponseBody
-    public List<User> hello() {
+    public User hello() {
         logger.error("IN HELLO");
 //        User user = userService.findAll();
 
-        return userService.findAll();
+//        return userService.findAll();
+        return userService.findById(4L);
+//        return userService.findByEmail("kasyk3@gmail.com");
     }
 }
