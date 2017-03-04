@@ -5,11 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Project AligatorPlus
- * Created by igor, 31.01.17 16:05
- */
-
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class AbstractEntity implements Serializable {

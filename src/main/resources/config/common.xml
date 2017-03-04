@@ -7,6 +7,8 @@
 
     <context:component-scan base-package="com.aligatorplus.controller"/>
     <context:component-scan base-package="com.aligatorplus.db"/>
+    <context:component-scan base-package="com.aligatorplus.security"/>
+
 
     <mvc:annotation-driven/>
 
@@ -25,4 +27,5 @@
 
     <bean id="jacksonObjectMapper" class="com.aligatorplus.JsonMapper" />
 
+    <import resource="security.xml"/>
 </beans>

@@ -14,11 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- * Project AligatorPlus
- * Created by igor, 01.02.17 14:42
- */
-
 @Service
 public class UserServiceImpl implements UserService {
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);

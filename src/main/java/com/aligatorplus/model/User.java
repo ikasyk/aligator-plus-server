@@ -1,23 +1,25 @@
 package com.aligatorplus.model;
 
-import javax.persistence.*;
+import com.sun.istack.internal.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * Project AligatorPlus
- * Created by igor, 30.01.17 15:39
- */
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements UserDetails {
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
+    @NotNull
     @Column(unique = true)
     private String login;
 
+    @NotNull
     @Column(unique = true)
     private String email;
 
@@ -61,6 +63,37 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    public String getUsername() {
+        return login;
+    }
+
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -84,6 +117,6 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return String.format("User{id=%d, login='%s', email='%s'}", id, login, email);
+        return String.format("User(id=%d, login='%s', email='%s'}", id, login, email);
     }
 }

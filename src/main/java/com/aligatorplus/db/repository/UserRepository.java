@@ -6,11 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Project AligatorPlus
- * Created by igor, 31.01.17 16:31
- */
-
 @Repository
 public interface UserRepository extends AbstractRepository<User> {
 
