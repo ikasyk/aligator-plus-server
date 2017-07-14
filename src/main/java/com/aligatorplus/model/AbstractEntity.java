@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class AbstractEntity implements Serializable {
     public abstract Long getId();

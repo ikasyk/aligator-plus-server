@@ -4,7 +4,6 @@ import com.aligatorplus.controller.profile.ProfileController;
 import com.aligatorplus.core.response.AbstractResponse;
 import com.aligatorplus.core.response.ErrorResponse;
 import com.aligatorplus.core.response.code.CommonResponseCode;
-import com.aligatorplus.core.response.code.ResponseCode;
 import com.aligatorplus.db.service.SiteService;
 import com.aligatorplus.db.service.UserService;
 import com.aligatorplus.model.Site;
@@ -15,7 +14,7 @@ import com.rometools.rome.io.SyndFeedInput;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.postgresql.util.PSQLException;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,42 +77,8 @@ public class SitesController {
         }
 
         try {
-            Connection.Response response;
+            return doAddSite(requestBody, retrievedUser, isLink);
 
-            if (isLink) {
-                response = Jsoup.connect(requestBody.getLink()).userAgent(USER_AGENT).execute();
-            } else {
-                response = Jsoup.connect("http://" + requestBody.getLink()).userAgent(USER_AGENT).execute();
-
-                if (response.statusCode() >= 400) {
-                    response = Jsoup.connect("https://" + requestBody.getLink()).userAgent(USER_AGENT).execute();
-                }
-            }
-
-            if (response.statusCode() >= 400) {
-                return new ResponseEntity<ErrorResponse>(new ErrorResponse(SitesResponseCode.PAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
-            }
-
-            if (Pattern.compile("^(?:application/rss\\+xml|text/xml)").matcher(response.contentType()).find()) {
-                if (siteService.findByRssLink(response.url().toString()) != null) {
-                    return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
-                }
-
-                SyndFeedInput input = new SyndFeedInput();
-                SyndFeed feed = input.build(new InputStreamReader(response.url().openStream()));
-
-                Site site = new Site(response.url().getHost(), response.url().toString(), feed.getTitle());
-
-                siteService.create(site);
-
-                return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
-            } else {
-                logger.error("Its website");
-
-            }
-            logger.error(response.contentType());
-
-            return null;
         } catch (IOException exception) {
             logger.error("Jsoup throws exception.");
             exception.printStackTrace();
@@ -122,6 +87,69 @@ public class SitesController {
             logger.error("Rome throws exception.");
             exception.printStackTrace();
             return new ResponseEntity<ErrorResponse>(new ErrorResponse(CommonResponseCode.UNDETECTED), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private ResponseEntity doAddSite(SiteAddRequestBody requestBody, User retrievedUser, boolean isLink)
+            throws IOException, FeedException {
+        Connection.Response response;
+
+        if (isLink) {
+            response = Jsoup.connect(requestBody.getLink()).userAgent(USER_AGENT).execute();
+        } else {
+            response = Jsoup.connect("http://" + requestBody.getLink()).userAgent(USER_AGENT).execute();
+
+            if (response.statusCode() >= 400) {
+                response = Jsoup.connect("https://" + requestBody.getLink()).userAgent(USER_AGENT).execute();
+            }
+        }
+
+        if (response.statusCode() >= 400) {
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse(SitesResponseCode.PAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+
+        if (Pattern.compile("^(?:application/rss\\+xml|text/xml|application/xml)").matcher(response.contentType()).find()) {
+            if (siteService.findByRssLink(response.url().toString()) != null) {
+                return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
+            }
+
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new InputStreamReader(response.url().openStream()));
+
+            Site site = new Site(response.url().getHost(), response.url().toString(), feed.getTitle());
+
+//            siteService.create(site);
+
+            logger.error("Here added site " + site);
+            retrievedUser.addSite(site);
+            userService.update(retrievedUser);
+
+            return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
+        } else {
+            Document doc = response.parse();
+
+            Element link = doc.select("link[type=\"application/rss+xml\"]").first();
+
+            if (link == null || link.attr("href") == null) {
+                return new ResponseEntity<ErrorResponse>(new ErrorResponse(SitesResponseCode.RSS_NOT_FOUND), HttpStatus.NOT_FOUND);
+            }
+
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new InputStreamReader(new URL(link.attr("href")).openStream()));
+
+            if (siteService.findByRssLink(feed.getLink()) != null) {
+                return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
+            }
+
+            Site site = new Site(response.url().getHost(), link.attr("href"), feed.getTitle());
+
+//            siteService.create(site);
+            logger.error("Here added 2 site " + site);
+            retrievedUser.addSite(site);
+
+            userService.update(retrievedUser);
+
+            return new ResponseEntity<AbstractResponse>(new AbstractResponse(CommonResponseCode.OK), HttpStatus.OK);
         }
     }
 }

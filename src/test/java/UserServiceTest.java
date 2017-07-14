@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/config/test.xml"})

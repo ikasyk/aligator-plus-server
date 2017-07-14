@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -25,6 +27,19 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Column
     private String password;
+
+
+//    @JoinColumns({
+//            @JoinColumn(name = "site_host", referencedColumnName = "host"),
+//            @JoinColumn(name = "site_title", referencedColumnName = "title"),
+//            @JoinColumn(name = "site_rss", referencedColumnName = "rsslink")
+//    })
+
+    @ManyToMany
+    @JoinTable(name = "subscribes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "site_id"))
+    private Set<Site> sites = new HashSet<Site>();
 
     public User() {
         this.id = 0L;
@@ -93,6 +108,19 @@ public class User extends AbstractEntity implements UserDetails {
 
     public boolean isEnabled() {
         return true;
+    }
+
+//    @ManyToMany(cascade = CascadeType.ALL)
+    public Set<Site> getSites() {
+        return sites;
+    }
+
+    public void setSites(Set<Site> sites) {
+        this.sites = sites;
+    }
+
+    public void addSite(Site site) {
+        sites.add(site);
     }
 
     @Override

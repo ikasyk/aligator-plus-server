@@ -2,6 +2,9 @@ package com.aligatorplus.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "sites")
@@ -20,6 +23,12 @@ public class Site extends AbstractEntity {
 
     @NotNull
     private String title;
+
+    @ManyToMany
+    @JoinTable(name = "subscribes",
+            joinColumns = @JoinColumn(name = "site_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 
     public Site() {
         this.id = 0L;
@@ -65,6 +74,14 @@ public class Site extends AbstractEntity {
         this.title = title;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,11 +98,18 @@ public class Site extends AbstractEntity {
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + host.hashCode();
-        result = 31 * result + rssLink.hashCode();
-        result = 31 * result + title.hashCode();
-        return result;
+//        int result = id.hashCode();
+        System.out.println("PREV HASH");
+        System.out.println("HASHCODE = " + host.hashCode());
+        try {
+            int result = host.hashCode();
+            result = 31 * result + rssLink.hashCode();
+            result = 31 * result + title.hashCode();
+            result = 31 * result + (users != null ? users.hashCode() : 0);
+            return result;
+        } catch (NullPointerException e) {
+            return 1;
+        }
     }
 
     @Override

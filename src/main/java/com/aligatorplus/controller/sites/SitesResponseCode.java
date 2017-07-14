@@ -4,7 +4,8 @@ import com.aligatorplus.core.response.code.ResponseCode;
 
 public enum SitesResponseCode implements ResponseCode {
     INCORRECT_LINK(151),
-    PAGE_NOT_FOUND(152);
+    PAGE_NOT_FOUND(152),
+    RSS_NOT_FOUND(153);
 
     private int code;
 
